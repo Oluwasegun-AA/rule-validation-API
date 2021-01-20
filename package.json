@@ -4,9 +4,32 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "yarn build && yarn runApp",
+    "runApp": "nodemon dist/server/app.js",
+    "build": "yarn clear && babel ./ -d dist --ignore node_modules",
+    "clear": "rm -rf dist",
+    "lint": "eslint ./ --fix",
+    "pretty": "./node_modules/.bin/prettier --single-quote --write \"./**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@babel/runtime": "7.12.5",
+    "dotenv": "8.2.0",
+    "express": "4.17.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.12.10",
+    "@babel/core": "7.12.10",
+    "@babel/plugin-transform-runtime": "7.12.10",
+    "@babel/preset-env": "7.12.11",
+    "eslint": "7.18.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.22.1",
+    "nodemon": "2.0.7",
+    "prettier": "2.2.1"
+  }
 }
