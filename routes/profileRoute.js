@@ -18,7 +18,7 @@ profile.get('/', (req, res) => responseHandler(res, {
     github: '@oluwasegun-aa',
     email: 'oluwasegunadepoju@gmail.com',
     mobile: '08067623101',
-    twitter: '@oluwaseguun_aa'
+    twitter: '@oluwasegun_aa'
   }
 }));
 
