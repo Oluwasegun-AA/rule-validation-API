@@ -61,7 +61,7 @@ const rules = {
         .required()
         .messages({
           'string.base': 'name should be a string.',
-          'string.empty': 'field name in data should have a value',
+          'string.empty': 'field name in data should have a value.',
           'any.required': 'field nanme is missing from data.',
         }),
       crew: joi
@@ -127,7 +127,7 @@ const rules = {
             .strict(),
         }).required().messages({
           'object.base': 'missions should be a number or an object.',
-          'object.empty': 'field missions in data should have a value',
+          'object.empty': 'field missions in data should have a value.',
           'any.required': 'field missions is missing from data.',
         })
       )
