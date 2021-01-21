@@ -1,4 +1,11 @@
-import { statusCodes } from './status';
+import {
+  status,
+  statusCodes,
+} from './status';
+
+import responseHandler from './responseHandler';
+
+const { badRequest } = statusCodes;
 
 const log = string => {
   process.stdout.write(`${string}\n`);
@@ -9,11 +16,11 @@ const connectionMessage = port => {
 };
 
 const catchAllError = app =>
-  app.use('*', ({ method, originalUrl }, res) =>
-    res.status(404).send({
-      status: statusCodes.badRequest,
-      message: `route ${method} ${originalUrl} is not a valid`,
-    }));
+  app.use('*', ({ method, originalUrl }, res) => responseHandler(res, {
+    code: badRequest,
+    status: status.error,
+    message: `The request ${method} ${originalUrl} is invalid.`,
+  }));
 
 export {
   log,
