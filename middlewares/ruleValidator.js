@@ -25,15 +25,27 @@ const rules = {
         'string.empty': 'field condition in rule have a value.',
         'any.required': 'field condition is missing from rule.',
       }),
-    condition_value: joi
-      .number()
-      .positive()
-      .required()
-      .messages({
-        'number.base': 'condition_value should be a number.',
-        'any.required': 'field condition_value is missing from rule.',
-      })
-      .strict()
+    condition_value: joi.alternatives().try(
+      joi
+        .number()
+        .positive()
+        .required()
+        .messages({
+          'any.required': 'field condition_value is missing from rule.',
+        })
+        .strict(),
+      joi
+        .string()
+        .required()
+        .messages({
+          'string.empty': 'field condition_value in rule should have a value.',
+          'any.required': 'field condition_value is missing from rule.',
+        }),
+    ).required().messages({
+      'object.base': 'field condition_value should be a number or a string.',
+      'object.empty': 'field condition_value in rule should have a value',
+      'any.required': 'field condition_value is missing from rule.',
+    })
   })
     .required()
     .messages({
