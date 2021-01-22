@@ -4,40 +4,31 @@ import {
   responseHandler, status, statusCodes
 } from '../helpers';
 
+const { success, badRequest } = statusCodes;
+const { error } = status;
+
 const response = (res, {
   verdict, field, fieldValue, condition, condition_value
-}) => {
-  if (verdict) {
-    return responseHandler(res, {
-      code: statusCodes.success,
-      message: `field ${field} successfully validated.`,
-      status: status.success,
-      data: {
-        valudation: {
-          error: false,
-          field,
-          field_value: fieldValue,
-          condition,
-          condition_value
-        }
-      }
-    });
-  }
-  return responseHandler(res, {
-    code: statusCodes.badRequest,
-    message: `field ${field} failed validation.`,
-    status: status.error,
-    data: {
-      valudation: {
-        error: true,
-        field,
-        field_value: fieldValue,
-        condition,
-        condition_value
-      }
+}) => responseHandler(res, {
+  code: verdict ? success : badRequest,
+  message: `field ${field} ${verdict ? 'successfully validated' : 'failed validation'}.`,
+  status: verdict ? status.success : error,
+  data: {
+    validation: {
+      error: !verdict,
+      field,
+      field_value: fieldValue,
+      condition,
+      condition_value
     }
-  });
-};
+  }
+});
+
+const missingfieldResponse = (res, field) => responseHandler(res, {
+  code: badRequest,
+  message: `field ${field} is missing from data.`,
+  status: error,
+});
 
 class Validator {
   static async validateRule(req, res) {
@@ -54,11 +45,7 @@ class Validator {
     const tree = field.split('.');
     if (tree.length >= 1 && isObject(data[tree[0]]) && !Array.isArray(data[tree[0]])) {
       if (JSON.stringify(data).indexOf(tree[tree.length - 1]) === -1) {
-        return responseHandler(res, {
-          code: statusCodes.badRequest,
-          message: `field ${field} is missing from data.`,
-          status: status.error,
-        });
+        return missingfieldResponse(res, field);
       }
 
       for (let i = 0; i <= (tree.length - 1); i += 1) {
@@ -72,11 +59,7 @@ class Validator {
       });
     }
     if (!data[field]) {
-      return responseHandler(res, {
-        code: statusCodes.badRequest,
-        message: `field ${field} is missing from data.`,
-        status: status.error,
-      });
+      return missingfieldResponse(res, field);
     }
     fieldValue = fieldValue[field];
     const verdict = evaluateConditions[condition](condition_value, data);
