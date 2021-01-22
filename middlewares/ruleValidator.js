@@ -139,10 +139,11 @@ const rules = {
 
 const validatorRules = joi.object(rules);
 const validatePayload = async (req, res, next) => {
-  const { body } = req;
+  const { body, headers } = req;
+  const contentType = headers['content-type'];
   const payloadKeys = Object.keys(body);
   const validKeys = ['rule', 'data'];
-  if (
+  if (contentType !== 'application/json' ||
     !isObject(body) || Array.isArray(body)
       || (payloadKeys.length >= 1 && !payloadKeys.every(key => validKeys.includes(key)))) {
     return responseHandler(
